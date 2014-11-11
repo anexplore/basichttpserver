@@ -4,15 +4,9 @@ package com.fd.basichttpserver;
  * @author caoly
  *
  */
-public class BasicHttpServer {
-	public boolean init() {
-		return false;
-	};
-	public boolean start() {
-		return false;
-	}
-	public void stop() {
-		
-	}
+public abstract class BasicHttpServer {
+	public abstract boolean init() throws Exception;
+	public abstract boolean start() throws Exception;
+	public abstract void stop();
 	
 }
