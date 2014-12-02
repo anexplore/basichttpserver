@@ -1,6 +1,5 @@
 package com.fd.basichttpserver.impl;
 
-import java.io.IOException;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -16,7 +15,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpProcessorBuilder;
@@ -44,7 +42,7 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 			int coreSize,long keepAliveTime,int maxBlockingThreadNum) {
 		this.port = port;
 		this.maxWorkThread = maxWorkThread;
-		threadPool = new ThreadPoolExecutor(coreSize,maxWorkThread,keepAliveTime,
+		threadPool = new ThreadPoolExecutor(coreSize,this.maxWorkThread,keepAliveTime,
 				TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>(maxBlockingThreadNum));
 		threadPool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 	}
@@ -64,7 +62,7 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 
         // Set up the HTTP service
         httpService = new HttpService(httpproc, reqistry);
-        if (port == 8443) {
+        if (port == 443) {
             // Initialize SSL context
             ClassLoader cl = BasicHttpServerImpl.class.getClassLoader();
             URL url = cl.getResource("my.keystore");
