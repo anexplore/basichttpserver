@@ -10,6 +10,7 @@ import org.apache.http.protocol.HttpContext;
 
 import com.fd.basichttpserver.HttpReqHandler;
 import com.fd.basichttpserver.entity.StringEntityWithGzipCompress;
+import com.fd.basichttpserver.protocol.HttpConstant;
 
 public class ReqHandler extends HttpReqHandler {
 
@@ -25,24 +26,26 @@ public class ReqHandler extends HttpReqHandler {
 		boolean useGzip = useGzip(request);
 		response.setStatusCode(HttpStatus.SC_OK);
 		if (useGzip) {
-			response.setHeader("Content-Encoding", "gzip");
+			response.setHeader(HttpConstant.CONTENT_ENCODING, HttpConstant.ENCODING_GZIP);
 		}
 		String result = "{\"code\":200}";
 		StringEntity entity = null;
 		if (!useGzip) {
-			entity = new StringEntity(result,ContentType.create("text/plain", "utf-8"));
+			entity = new StringEntity(result,ContentType.create("text/plain", HttpConstant.UTF_8));
 		} else {
-			entity = new StringEntityWithGzipCompress(result,ContentType.create("text/plain", "utf-8"));
+			entity = new StringEntityWithGzipCompress(result,ContentType.create("text/plain", HttpConstant.UTF_8));
 		}
 		response.setEntity(entity);
 	}
 	
+	/**
+	 * head.getValue may be null
+	 * @param request
+	 * @return
+	 */
 	private boolean useGzip (HttpRequest request) {
-		Header[] headers = request.getHeaders("Accept-Encoding");
-		if (headers != null) {
-			String v = headers[0].getValue().toLowerCase();
-			return v.contains("gzip");
-		}
-		return false;
+		Header header = request.getFirstHeader(HttpConstant.ACCEPT_ENCODING);
+		String value = header == null ? null : header.getValue().toLowerCase();
+		return value == null ? false : value.contains("gzip");
 	}
 }

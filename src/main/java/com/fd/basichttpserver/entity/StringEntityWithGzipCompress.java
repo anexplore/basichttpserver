@@ -35,7 +35,7 @@ public class StringEntityWithGzipCompress extends StringEntity {
 	}
 
 	public void writeTo(final OutputStream outstream) throws IOException {
-		Args.notNull(outstream, "Output stream");
+		Args.notNull(outstream, "GZIP Output stream");
 		GZIPOutputStream gzip = new GZIPOutputStream(outstream);
 		gzip.write(this.content);
 		gzip.flush();
