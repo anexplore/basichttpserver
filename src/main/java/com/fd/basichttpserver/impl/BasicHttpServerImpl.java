@@ -108,9 +108,7 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 		options.addOption("threadPoolCoreSize",true,"threadPoolCoreSize,default 50");
 		options.addOption("threadKeepAliveTime",true,"thread keep alive time,default 1000ms");
 		options.addOption("maxBlockingThreadNum",true,"max blocking thread number");
-		
 		CommandLine cmd = cmdParser.parse(options, args);
-		
 		String[] rArgs = cmd.getArgs();
 		if (rArgs.length != 2) {
 			HelpFormatter helpFormat = new  HelpFormatter();

@@ -35,11 +35,11 @@ public class ReqProcessor extends BasicReqProcessor {
                  this.httpservice.handleRequest(this.conn, context);
              }
          } catch (ConnectionClosedException ex) {
-        	 logger.info("Client closed connection");
+        	 logger.info("Client closed connection",ex);
          } catch (IOException ex) {
-             logger.warn("I/O error: " + ex.getMessage());
+             logger.warn("I/O error: ",ex);
          } catch (HttpException ex) {
-        	 logger.warn("Unrecoverable HTTP protocol violation: " + ex.getMessage());
+        	 logger.warn("Unrecoverable HTTP protocol violation:",ex);
          } finally {
              try {
                  this.conn.shutdown();

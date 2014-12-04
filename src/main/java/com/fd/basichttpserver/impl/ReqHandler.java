@@ -46,6 +46,6 @@ public class ReqHandler extends HttpReqHandler {
 	private boolean useGzip (HttpRequest request) {
 		Header header = request.getFirstHeader(HttpConstant.ACCEPT_ENCODING);
 		String value = header == null ? null : header.getValue().toLowerCase();
-		return value == null ? false : value.contains("gzip");
+		return value == null ? false : value.contains(HttpConstant.ENCODING_GZIP);
 	}
 }
