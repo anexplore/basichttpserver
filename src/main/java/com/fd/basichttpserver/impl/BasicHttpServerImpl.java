@@ -37,7 +37,7 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 	private volatile boolean inited = false;
 	private HttpService httpService = null;
 	private SSLServerSocketFactory sf = null;
-	
+	private Thread listenThread;
 	public BasicHttpServerImpl(int port,int maxWorkThread,
 			int coreSize,long keepAliveTime,int maxBlockingThreadNum) {
 		this.port = port;
@@ -90,15 +90,16 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 			logger.fatal("httpserver has not been inited");
 			return false;
 		}
-		Thread t = new Thread(new ReqListener(port, httpService, sf,threadPool));
-        t.setDaemon(false);
-        t.start();
+		listenThread = new Thread(new ReqListener(port, httpService, sf,threadPool));
+        listenThread.setDaemon(false);
+        listenThread.start();
 		return true;
 	}
 
 	@Override
 	public void stop() {
-		
+		listenThread.interrupt();
+		threadPool.shutdown();
 	}
 	public static void main(String[] args) throws Exception {
 		String usage = "BasicHttpServerImpl listenPort maxWorkThread";
