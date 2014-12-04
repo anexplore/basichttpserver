@@ -8,8 +8,9 @@ import org.apache.http.HttpServerConnection;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import com.fd.basichttpserver.BasicReqProcessor;
 
 public class ReqProcessor extends BasicReqProcessor {

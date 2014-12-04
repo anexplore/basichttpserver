@@ -4,11 +4,11 @@ import java.util.Locale;
 
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.MethodNotSupportedException;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 
 /**
  * http请求的实际处理类
@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
  */
 
 public abstract class HttpReqHandler implements HttpRequestHandler{
-	private final static Logger logger = LogManager.getLogger();
+	private final static Logger logger = LogManager.getLogger(HttpReqHandler.class);
 	public void handle(final HttpRequest request,
             final HttpResponse response,
             final HttpContext context) {

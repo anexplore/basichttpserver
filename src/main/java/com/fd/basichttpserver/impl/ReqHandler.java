@@ -1,5 +1,8 @@
 package com.fd.basichttpserver.impl;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -11,6 +14,7 @@ import org.apache.http.protocol.HttpContext;
 import com.fd.basichttpserver.HttpReqHandler;
 import com.fd.basichttpserver.entity.StringEntityWithGzipCompress;
 import com.fd.basichttpserver.protocol.HttpConstant;
+import com.fd.basichttpserver.utils.RequestParamterParser;
 
 public class ReqHandler extends HttpReqHandler {
 
@@ -23,6 +27,13 @@ public class ReqHandler extends HttpReqHandler {
 	@Override
 	public void doPost(HttpRequest request, HttpResponse response,
 			HttpContext context) {
+		RequestParamterParser parser = new RequestParamterParser(request);
+		Map<String,String> params = parser.getParams();
+		for (Entry<String,String> entry : params.entrySet()) {
+			System.out.println(entry.getKey() + "\t" + entry.getValue());
+		}
+		System.out.println(parser.getPath());
+		System.out.println(parser.getRef());
 		boolean useGzip = useGzip(request);
 		response.setStatusCode(HttpStatus.SC_OK);
 		if (useGzip) {

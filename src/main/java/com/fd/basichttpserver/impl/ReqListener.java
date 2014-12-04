@@ -13,8 +13,8 @@ import org.apache.http.HttpServerConnection;
 import org.apache.http.impl.DefaultBHttpServerConnection;
 import org.apache.http.impl.DefaultBHttpServerConnectionFactory;
 import org.apache.http.protocol.HttpService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.fd.basichttpserver.BasicReqListener;
 import com.fd.basichttpserver.BasicWorker;

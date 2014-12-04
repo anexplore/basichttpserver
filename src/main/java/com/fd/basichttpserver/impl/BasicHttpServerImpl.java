@@ -24,13 +24,13 @@ import org.apache.http.protocol.ResponseContent;
 import org.apache.http.protocol.ResponseDate;
 import org.apache.http.protocol.ResponseServer;
 import org.apache.http.protocol.UriHttpRequestHandlerMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.fd.basichttpserver.BasicHttpServer;
 
 public class BasicHttpServerImpl extends BasicHttpServer {
-	private final static Logger logger = LogManager.getLogger();
+	private final static Logger logger = LogManager.getLogger(BasicHttpServerImpl.class);
 	private int port = 8080;
 	private int maxWorkThread = 100;
 	private final ThreadPoolExecutor threadPool;
