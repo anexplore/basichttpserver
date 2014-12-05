@@ -2,12 +2,15 @@ package com.fd.basichttpserver;
 
 import java.util.Locale;
 
+import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import com.fd.basichttpserver.protocol.HttpConstant;
 
 
 /**
@@ -41,4 +44,14 @@ public abstract class HttpReqHandler implements HttpRequestHandler{
 	public abstract void doPost(final HttpRequest request,
             final HttpResponse response,
             final HttpContext context);
+	/**
+	 * head.getValue may be null
+	 * @param request
+	 * @return
+	 */
+	public boolean useGzip (HttpRequest request) {
+		Header header = request.getFirstHeader(HttpConstant.ACCEPT_ENCODING);
+		String value = header == null ? null : header.getValue().toLowerCase();
+		return value == null ? false : value.contains(HttpConstant.ENCODING_GZIP);
+	}
 }

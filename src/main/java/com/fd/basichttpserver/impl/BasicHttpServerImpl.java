@@ -28,6 +28,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.fd.basichttpserver.BasicHttpServer;
+import com.fd.basichttpserver.HttpReqHandler;
 
 public class BasicHttpServerImpl extends BasicHttpServer {
 	private final static Logger logger = LogManager.getLogger(BasicHttpServerImpl.class);
@@ -38,6 +39,7 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 	private HttpService httpService = null;
 	private SSLServerSocketFactory sf = null;
 	private Thread listenThread;
+	private UriHttpRequestHandlerMapper reqistry;
 	public BasicHttpServerImpl(int port,int maxWorkThread,
 			int coreSize,long keepAliveTime,int maxBlockingThreadNum) {
 		this.port = port;
@@ -57,7 +59,7 @@ public class BasicHttpServerImpl extends BasicHttpServer {
                 .add(new ResponseConnControl()).build();
 
         // Set up request handlers
-        UriHttpRequestHandlerMapper reqistry = new UriHttpRequestHandlerMapper();
+        reqistry = new UriHttpRequestHandlerMapper();
         reqistry.register("*", new ReqHandler());
 
         // Set up the HTTP service
@@ -95,7 +97,16 @@ public class BasicHttpServerImpl extends BasicHttpServer {
         listenThread.start();
 		return true;
 	}
-
+	public void register(String path, Class<? extends HttpReqHandler> c){
+		if (path != null  && c != null)
+			try {
+				this.reqistry.register(path, c.newInstance());
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+	}
 	@Override
 	public void stop() {
 		listenThread.interrupt();

@@ -3,7 +3,6 @@ package com.fd.basichttpserver.impl;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -49,14 +48,5 @@ public class ReqHandler extends HttpReqHandler {
 		response.setEntity(entity);
 	}
 	
-	/**
-	 * head.getValue may be null
-	 * @param request
-	 * @return
-	 */
-	private boolean useGzip (HttpRequest request) {
-		Header header = request.getFirstHeader(HttpConstant.ACCEPT_ENCODING);
-		String value = header == null ? null : header.getValue().toLowerCase();
-		return value == null ? false : value.contains(HttpConstant.ENCODING_GZIP);
-	}
+
 }
