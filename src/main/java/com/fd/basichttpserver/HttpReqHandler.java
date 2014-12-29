@@ -54,4 +54,15 @@ public abstract class HttpReqHandler implements HttpRequestHandler{
 		String value = header == null ? null : header.getValue().toLowerCase();
 		return value == null ? false : value.contains(HttpConstant.ENCODING_GZIP);
 	}
+	public String header2String(HttpRequest request) {
+		if (request == null) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder();
+		Header[] headers= request.getAllHeaders();
+		for (Header h : headers) {
+			sb.append(h.getName()+":" + h.getValue()).append("\n");
+		}
+		return sb.toString();
+	}
 }
