@@ -1,12 +1,16 @@
 package com.fd.basichttpserver.protocol;
+
 /**
  * MIME类型
+ * 
  * @see http://tool.oschina.net/commons
  * @author caoly
  *
  */
 public class Mime {
-	private Mime() {}
+	private Mime() {
+	}
+
 	public static String APPLICATION_OCTET_STREAM = "application/octet-stream";
 	public static String APPLICATION_X_001 = "application/x-001";
 	public static String TEXT_H323 = "text/h323";
@@ -56,7 +60,7 @@ public class Mime {
 	public static String APPLICATION_X_IGS = "application/x-igs";
 	public static String APPLICATION_X_IMG = "application/x-img";
 	public static String APPLICATION_X_INTERNET_SIGNUP = "application/x-internet-signup";
-	public static String APPLICATION_JAVA_STAR  = "java/*";
+	public static String APPLICATION_JAVA_STAR = "java/*";
 	public static String IMAGE_JPEG = "image/jpeg";
 	public static String APPLICATION_X_JPG = "application/x-jpg";
 	public static String APPLICATION_X_LAPLAYER_REG = "application/x-laplayer-reg";
@@ -139,7 +143,7 @@ public class Mime {
 	public static String APPLICATION_VND_MS_WPL = "application/vnd.ms-wpl";
 	public static String APPLICATION_X_WR1 = "application/x-wr1";
 	public static String APPLICATION_X_WRK = "application/x-wrk";
-	public static String APPLICATION_X_WS =	"application/x-ws";
+	public static String APPLICATION_X_WS = "application/x-ws";
 	public static String APPLICATION_VND_ADOBE_XDP = "application/vnd.adobe.xdp";
 	public static String APPLICATION_VND_ADOBE_XFD = "application/vnd.adobe.xfd";
 	public static String APPLICATION_X_XLS = "application/x-xls";

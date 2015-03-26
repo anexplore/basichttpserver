@@ -20,15 +20,15 @@ public class ReqHandler extends HttpReqHandler {
 	@Override
 	public void doGet(HttpRequest request, HttpResponse response,
 			HttpContext context) {
-		doPost(request,response,context);
+		doPost(request, response, context);
 	}
 
 	@Override
 	public void doPost(HttpRequest request, HttpResponse response,
 			HttpContext context) {
 		RequestParamterParser parser = new RequestParamterParser(request);
-		Map<String,String> params = parser.getParams();
-		for (Entry<String,String> entry : params.entrySet()) {
+		Map<String, String> params = parser.getParams();
+		for (Entry<String, String> entry : params.entrySet()) {
 			System.out.println(entry.getKey() + "\t" + entry.getValue());
 		}
 		System.out.println(parser.getPath());
@@ -36,17 +36,19 @@ public class ReqHandler extends HttpReqHandler {
 		boolean useGzip = useGzip(request);
 		response.setStatusCode(HttpStatus.SC_OK);
 		if (useGzip) {
-			response.setHeader(HttpConstant.CONTENT_ENCODING, HttpConstant.ENCODING_GZIP);
+			response.setHeader(HttpConstant.CONTENT_ENCODING,
+					HttpConstant.ENCODING_GZIP);
 		}
 		String result = "{\"code\":200}";
 		StringEntity entity = null;
 		if (!useGzip) {
-			entity = new StringEntity(result,ContentType.create("text/plain", HttpConstant.UTF_8));
+			entity = new StringEntity(result, ContentType.create("text/plain",
+					HttpConstant.UTF_8));
 		} else {
-			entity = new StringEntityWithGzipCompress(result,ContentType.create("text/plain", HttpConstant.UTF_8));
+			entity = new StringEntityWithGzipCompress(result,
+					ContentType.create("text/plain", HttpConstant.UTF_8));
 		}
 		response.setEntity(entity);
 	}
-	
 
 }

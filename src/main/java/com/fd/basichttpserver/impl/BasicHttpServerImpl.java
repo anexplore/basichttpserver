@@ -31,7 +31,8 @@ import com.fd.basichttpserver.BasicHttpServer;
 import com.fd.basichttpserver.HttpReqHandler;
 
 public class BasicHttpServerImpl extends BasicHttpServer {
-	private final static Logger logger = LogManager.getLogger(BasicHttpServerImpl.class);
+	private final static Logger logger = LogManager
+			.getLogger(BasicHttpServerImpl.class);
 	private int port = 8080;
 	private int maxWorkThread = 100;
 	private final ThreadPoolExecutor threadPool;
@@ -40,49 +41,52 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 	private SSLServerSocketFactory sf = null;
 	private Thread listenThread;
 	private UriHttpRequestHandlerMapper reqistry;
-	public BasicHttpServerImpl(int port,int maxWorkThread,
-			int coreSize,long keepAliveTime,int maxBlockingThreadNum) {
+
+	public BasicHttpServerImpl(int port, int maxWorkThread, int coreSize,
+			long keepAliveTime, int maxBlockingThreadNum) {
 		this.port = port;
 		this.maxWorkThread = maxWorkThread;
-		threadPool = new ThreadPoolExecutor(coreSize,this.maxWorkThread,keepAliveTime,
-				TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>(maxBlockingThreadNum));
-		threadPool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+		threadPool = new ThreadPoolExecutor(coreSize, this.maxWorkThread,
+				keepAliveTime, TimeUnit.SECONDS,
+				new LinkedBlockingQueue<Runnable>(maxBlockingThreadNum));
+		threadPool
+				.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	@Override
 	public boolean init() throws Exception {
-		 // Set up the HTTP protocol processor
-        HttpProcessor httpproc = HttpProcessorBuilder.create()
-                .add(new ResponseDate())
-                .add(new ResponseServer("FDSERVER/1.1"))
-                .add(new ResponseContent())
-                .add(new ResponseConnControl()).build();
+		// Set up the HTTP protocol processor
+		HttpProcessor httpproc = HttpProcessorBuilder.create()
+				.add(new ResponseDate())
+				.add(new ResponseServer("FDSERVER/1.1"))
+				.add(new ResponseContent()).add(new ResponseConnControl())
+				.build();
 
-        // Set up request handlers
-        reqistry = new UriHttpRequestHandlerMapper();
-        reqistry.register("*", new ReqHandler());
+		// Set up request handlers
+		reqistry = new UriHttpRequestHandlerMapper();
+		reqistry.register("*", new ReqHandler());
 
-        // Set up the HTTP service
-        httpService = new HttpService(httpproc, reqistry);
-        if (port == 443) {
-            // Initialize SSL context
-            ClassLoader cl = BasicHttpServerImpl.class.getClassLoader();
-            URL url = cl.getResource("my.keystore");
-            if (url == null) {
-                logger.fatal("Keystore not found");
-                System.exit(1);
-            }
-            KeyStore keystore  = KeyStore.getInstance("jks");
-            keystore.load(url.openStream(), "secret".toCharArray());
-            KeyManagerFactory kmfactory = KeyManagerFactory.getInstance(
-                    KeyManagerFactory.getDefaultAlgorithm());
-            kmfactory.init(keystore, "secret".toCharArray());
-            KeyManager[] keymanagers = kmfactory.getKeyManagers();
-            SSLContext sslcontext = SSLContext.getInstance("TLS");
-            sslcontext.init(keymanagers, null, null);
-            sf = sslcontext.getServerSocketFactory();
-        }
-        inited = true;
+		// Set up the HTTP service
+		httpService = new HttpService(httpproc, reqistry);
+		if (port == 443) {
+			// Initialize SSL context
+			ClassLoader cl = BasicHttpServerImpl.class.getClassLoader();
+			URL url = cl.getResource("my.keystore");
+			if (url == null) {
+				logger.fatal("Keystore not found");
+				System.exit(1);
+			}
+			KeyStore keystore = KeyStore.getInstance("jks");
+			keystore.load(url.openStream(), "secret".toCharArray());
+			KeyManagerFactory kmfactory = KeyManagerFactory
+					.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+			kmfactory.init(keystore, "secret".toCharArray());
+			KeyManager[] keymanagers = kmfactory.getKeyManagers();
+			SSLContext sslcontext = SSLContext.getInstance("TLS");
+			sslcontext.init(keymanagers, null, null);
+			sf = sslcontext.getServerSocketFactory();
+		}
+		inited = true;
 		return inited;
 	}
 
@@ -92,13 +96,15 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 			logger.fatal("httpserver has not been inited");
 			return false;
 		}
-		listenThread = new Thread(new ReqListener(port, httpService, sf,threadPool));
-        listenThread.setDaemon(false);
-        listenThread.start();
+		listenThread = new Thread(new ReqListener(port, httpService, sf,
+				threadPool));
+		listenThread.setDaemon(false);
+		listenThread.start();
 		return true;
 	}
-	public void register(String path, Class<? extends HttpReqHandler> c){
-		if (path != null  && c != null)
+
+	public void register(String path, Class<? extends HttpReqHandler> c) {
+		if (path != null && c != null)
 			try {
 				this.reqistry.register(path, c.newInstance());
 			} catch (InstantiationException e) {
@@ -107,23 +113,28 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 				e.printStackTrace();
 			}
 	}
+
 	@Override
 	public void stop() {
 		listenThread.interrupt();
 		threadPool.shutdown();
 	}
+
 	public static void main(String[] args) throws Exception {
 		String usage = "BasicHttpServerImpl listenPort maxWorkThread";
 		CommandLineParser cmdParser = new PosixParser();
 		Options options = new Options();
-		options.addOption("h", "help",false, "usage");
-		options.addOption("threadPoolCoreSize",true,"threadPoolCoreSize,default 50");
-		options.addOption("threadKeepAliveTime",true,"thread keep alive time,default 1000ms");
-		options.addOption("maxBlockingThreadNum",true,"max blocking thread number");
+		options.addOption("h", "help", false, "usage");
+		options.addOption("threadPoolCoreSize", true,
+				"threadPoolCoreSize,default 50");
+		options.addOption("threadKeepAliveTime", true,
+				"thread keep alive time,default 1000ms");
+		options.addOption("maxBlockingThreadNum", true,
+				"max blocking thread number");
 		CommandLine cmd = cmdParser.parse(options, args);
 		String[] rArgs = cmd.getArgs();
 		if (rArgs.length != 2) {
-			HelpFormatter helpFormat = new  HelpFormatter();
+			HelpFormatter helpFormat = new HelpFormatter();
 			helpFormat.printHelp(usage, options);
 			return;
 		}
@@ -133,16 +144,20 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 		long threadKeepAliveTime = 1000;
 		int maxBlockingThreadNum = 100;
 		if (cmd.hasOption("threadPoolCoreSize")) {
-			threadPoolCoreSize = Integer.valueOf(cmd.getOptionValue("threadPoolCoreSize"));
+			threadPoolCoreSize = Integer.valueOf(cmd
+					.getOptionValue("threadPoolCoreSize"));
 		}
 		if (cmd.hasOption("threadKeepAliveTime")) {
-			threadKeepAliveTime = Long.valueOf(cmd.getOptionValue("threadKeepAliveTime"));
+			threadKeepAliveTime = Long.valueOf(cmd
+					.getOptionValue("threadKeepAliveTime"));
 		}
 		if (cmd.hasOption("maxBlockingThreadNum")) {
-			threadKeepAliveTime = Integer.valueOf(cmd.getOptionValue("maxBlockingThreadNum"));
+			threadKeepAliveTime = Integer.valueOf(cmd
+					.getOptionValue("maxBlockingThreadNum"));
 		}
-		BasicHttpServerImpl serverImpl = new BasicHttpServerImpl(port,maxWorkThread,
-				threadPoolCoreSize,threadKeepAliveTime,maxBlockingThreadNum);
+		BasicHttpServerImpl serverImpl = new BasicHttpServerImpl(port,
+				maxWorkThread, threadPoolCoreSize, threadKeepAliveTime,
+				maxBlockingThreadNum);
 		serverImpl.init();
 		serverImpl.start();
 	}

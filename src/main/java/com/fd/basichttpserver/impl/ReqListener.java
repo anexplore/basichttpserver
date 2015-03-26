@@ -20,7 +20,8 @@ import com.fd.basichttpserver.BasicReqListener;
 import com.fd.basichttpserver.BasicWorker;
 
 public class ReqListener extends BasicReqListener {
-	private final static Logger logger = LogManager.getLogger(ReqListener.class);
+	private final static Logger logger = LogManager
+			.getLogger(ReqListener.class);
 	private final HttpConnectionFactory<DefaultBHttpServerConnection> connFactory;
 	private final ServerSocket serversocket;
 	private final HttpService httpService;
@@ -38,8 +39,7 @@ public class ReqListener extends BasicReqListener {
 
 	@Override
 	public void doListen() {
-		logger.info("Listening on port "
-				+ this.serversocket.getLocalPort());
+		logger.info("Listening on port " + this.serversocket.getLocalPort());
 		while (!Thread.interrupted()) {
 			try {
 				// Set up HTTP connection

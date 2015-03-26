@@ -18,7 +18,7 @@ import org.apache.http.util.EntityUtils;
  * 
  */
 public class RequestParamterParser {
-	private  Map<String, String> params = new HashMap<String, String>(10);
+	private Map<String, String> params = new HashMap<String, String>(10);
 	private String path = "";
 	private String ref = "";
 	public static final char QUERY_SPLITER = '?';
@@ -37,7 +37,7 @@ public class RequestParamterParser {
 	private void parser(HttpRequest request) {
 		String target = request.getRequestLine().getUri();
 		try {
-			//target = URLDecoder.decode(target, "UTF-8");
+			// target = URLDecoder.decode(target, "UTF-8");
 			parserUri(target.toCharArray());
 			// entity body
 			if (request instanceof HttpEntityEnclosingRequest) {
@@ -71,9 +71,10 @@ public class RequestParamterParser {
 		try {
 			path = URLDecoder.decode(path, "UTF-8");
 			ref = URLDecoder.decode(ref, "UTF-8");
-			Map<String,String> tmp = new HashMap<String,String>();
-			for (Entry<String,String> entry : params.entrySet()) {
-				tmp.put(URLDecoder.decode(entry.getKey(), "UTF-8"), URLDecoder.decode(entry.getValue(), "UTF-8"));
+			Map<String, String> tmp = new HashMap<String, String>();
+			for (Entry<String, String> entry : params.entrySet()) {
+				tmp.put(URLDecoder.decode(entry.getKey(), "UTF-8"),
+						URLDecoder.decode(entry.getValue(), "UTF-8"));
 			}
 			params = tmp;
 		} catch (UnsupportedEncodingException e) {
