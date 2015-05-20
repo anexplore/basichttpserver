@@ -61,7 +61,6 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 				.add(new ResponseServer("FDSERVER/1.1"))
 				.add(new ResponseContent()).add(new ResponseConnControl())
 				.build();
-
 		// Set up request handlers
 		reqistry = new UriHttpRequestHandlerMapper();
 		reqistry.register("*", new ReqHandler());
@@ -103,8 +102,14 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 		return true;
 	}
 
+	public void register(String path, HttpReqHandler handler) {
+		if (path != null && handler != null) {
+			this.reqistry.register(path, handler);
+		}
+	}
+	
 	public void register(String path, Class<? extends HttpReqHandler> c) {
-		if (path != null && c != null)
+		if (path != null && c != null) {
 			try {
 				this.reqistry.register(path, c.newInstance());
 			} catch (InstantiationException e) {
@@ -112,6 +117,7 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}
+		}
 	}
 
 	@Override

@@ -47,13 +47,8 @@ public class RequestParamterParser {
 					return;
 				}
 				byte[] entityContent = EntityUtils.toByteArray(entity);
-				String charset = entity.getContentEncoding() == null ? null
-						: entity.getContentEncoding().getValue();
-				if (charset == null || charset.isEmpty()) {
-					charset = CharsetDetector.getCharset(entityContent);
-				}
+				String charset = "utf-8";
 				String content = new String(entityContent, charset);
-				System.out.println("content:" + content);
 				String[] pairs = content.split(PARAM_SPLITER + "");
 				for (int i = 0; i < pairs.length; i++) {
 					String kv = pairs[i];
