@@ -40,6 +40,8 @@ public class ReqProcessor extends BasicReqProcessor {
 			logger.warn("I/O error: ", ex);
 		} catch (HttpException ex) {
 			logger.warn("Unrecoverable HTTP protocol violation:", ex);
+		} catch (Exception e) {
+			logger.warn("request processor error:", e);
 		} finally {
 			try {
 				this.conn.shutdown();

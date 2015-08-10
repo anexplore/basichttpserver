@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.net.ssl.SSLServerSocketFactory;
@@ -51,6 +52,9 @@ public class ReqListener extends BasicReqListener {
 				// Start worker thread
 				BasicWorker t = new ReqProcessor(this.httpService, conn);
 				this.threadPool.submit(t);
+				logger.info("request has been submitted to request processor thread pool");
+			} catch (RejectedExecutionException ex) {
+				logger.warn("reject submit:", ex);
 			} catch (InterruptedIOException ex) {
 				break;
 			} catch (IOException e) {
@@ -59,7 +63,7 @@ public class ReqListener extends BasicReqListener {
 				break;
 			}
 		}
-
+		logger.info("request listener stops");
 	}
 
 }
