@@ -57,7 +57,7 @@ public class ReqListener extends BasicReqListener {
 						.createConnection(socket);
 				conn.setSocketTimeout(10000);
 				connEntry = new HttpServerConnectionEntry(conn,
-						System.currentTimeMillis(), 10000);
+						System.currentTimeMillis(), 60000);
 				connPool.addConnectionEntry(connEntry);
 				BasicWorker t = new ReqProcessor(this.httpService, connEntry, connPool);
 				threadPool.submit(t);
