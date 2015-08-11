@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 
 import com.fd.basichttpserver.BasicHttpServer;
 import com.fd.basichttpserver.HttpReqHandler;
+import com.fd.basichttpserver.HttpServerConnectionPool;
 
 public class BasicHttpServerImpl extends BasicHttpServer {
 	private final static Logger logger = LogManager
@@ -37,10 +38,11 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 	private int maxWorkThread = 100;
 	private final ThreadPoolExecutor threadPool;
 	private volatile boolean inited = false;
+	private HttpServerConnectionPool connPool;
 	private HttpService httpService = null;
 	private SSLServerSocketFactory sf = null;
-	private Thread listenThread;
 	private UriHttpRequestHandlerMapper reqistry;
+	private Thread listenThread;
 
 	public BasicHttpServerImpl(int port, int maxWorkThread, int coreSize,
 			long keepAliveTime, int maxBlockingThreadNum) {
@@ -85,6 +87,8 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 			sslcontext.init(keymanagers, null, null);
 			sf = sslcontext.getServerSocketFactory();
 		}
+		//setup connection pool
+		connPool = new HttpServerConnectionPool();
 		inited = true;
 		return inited;
 	}
@@ -95,8 +99,9 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 			logger.fatal("httpserver has not been inited");
 			return false;
 		}
+		connPool.start();
 		listenThread = new Thread(new ReqListener(port, httpService, sf,
-				threadPool));
+				threadPool, connPool));
 		listenThread.setDaemon(false);
 		listenThread.start();
 		return true;
@@ -124,6 +129,7 @@ public class BasicHttpServerImpl extends BasicHttpServer {
 	public void stop() {
 		listenThread.interrupt();
 		threadPool.shutdown();
+		connPool.shutdown();
 	}
 
 	public static void main(String[] args) throws Exception {

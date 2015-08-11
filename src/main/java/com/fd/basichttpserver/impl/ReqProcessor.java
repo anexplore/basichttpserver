@@ -12,27 +12,32 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.fd.basichttpserver.BasicReqProcessor;
+import com.fd.basichttpserver.HttpServerConnectionEntry;
+import com.fd.basichttpserver.HttpServerConnectionPool;
 
 public class ReqProcessor extends BasicReqProcessor {
 	private final static Logger logger = LogManager
 			.getLogger(ReqProcessor.class);
 
 	private final HttpService httpservice;
-	private final HttpServerConnection conn;
-
+	private final HttpServerConnectionEntry connEntry;
+	private final HttpServerConnectionPool connPool;
+	
 	public ReqProcessor(final HttpService httpservice,
-			final HttpServerConnection conn) {
+			final HttpServerConnectionEntry connEntry,
+			final HttpServerConnectionPool connPool) {
 		super();
 		this.httpservice = httpservice;
-		this.conn = conn;
+		this.connEntry = connEntry;
+		this.connPool = connPool;
 	}
 
 	@Override
 	public void doProcess() {
 		HttpContext context = new BasicHttpContext(null);
 		try {
-			while (!Thread.interrupted() && this.conn.isOpen()) {
-				this.httpservice.handleRequest(this.conn, context);
+			while (!Thread.interrupted() && this.connEntry.connection.isOpen()) {
+				this.httpservice.handleRequest(this.connEntry.connection, context);
 			}
 		} catch (ConnectionClosedException ex) {
 			logger.info("Client closed connection", ex);
@@ -43,10 +48,7 @@ public class ReqProcessor extends BasicReqProcessor {
 		} catch (Exception e) {
 			logger.warn("request processor error:", e);
 		} finally {
-			try {
-				this.conn.shutdown();
-			} catch (IOException ignore) {
-			}
+			connPool.release(connEntry);
 		}
 
 	}
