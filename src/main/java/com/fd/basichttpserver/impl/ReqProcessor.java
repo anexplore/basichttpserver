@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.apache.http.ConnectionClosedException;
 import org.apache.http.HttpException;
-import org.apache.http.HttpServerConnection;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpService;
